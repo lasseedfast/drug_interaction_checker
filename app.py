@@ -1,5 +1,4 @@
 import requests
-import json
 import tabula
 import re
 import streamlit as st
@@ -10,8 +9,7 @@ def get_substance(x):
     s = re.search(r'\w+', l[-1]).group()
     return s.lower()
 
-# Get the pdf with prescriptions from the user.
-
+# Title and explainer.
 st.title('Medicinkollen 🕵️')
 st.markdown('''
 🧑‍⚕️ *Läkare ska ha koll på dina recept så att inga mediciner "krockar" men
@@ -26,20 +24,23 @@ läkemedel du har.*
 varningar.*  
 😌 *Ingen information sparas i den här tjänsten.*
 ''')
+
+# Get the pdf with prescriptions from the user.
 pdf = st.file_uploader(label='Ladda upp din läkemedelslista', type='pdf')
 
 if pdf:
 
     # Extract table from prescription pdf.
-    area = [111, 20, 528, 822]
+    area = [111, 20, 528, 822] # Coordinates for the corners (up, left, down, right).
     df = tabula.read_pdf(pdf, pages='all', area=area, lattice=True)[0]
     df.columns = ['Uthämtat datum', 'Uthämtat läkemedel', 'Användning', 'Förskrivet av', 'Uthämtad mängd', 'Läkemedelsgrupp']
     df.dropna(axis=0, inplace=True)
     df['substance'] = df['Uthämtat läkemedel'].apply(lambda x: get_substance(x))
 
-    # Make list of precripted substances.
+    # Create list of precripted substances.
     substances = df.substance.tolist()
 
+    # Create list of substance ids.
     substances_id_list = []
     for substance in substances:
         # Get data for the substance.
@@ -54,13 +55,12 @@ if pdf:
     substances_id_url_list = '&nslIds='.join(substances_id_list)
     url = 'https://janusmed.se/interaktioner?nplIds=' + substances_id_url_list
     
-    # Show text with URL to janusmed.
+    # Show text with URL to janusmed.se.
     st.markdown(f'''
     :grey[*Följ [den här länken]({url}) för att se om dina 
     läkemedel går bra ihop eller om det kan finnas något
     du skulle kunna prata med din läkare om. Nedan kan du se en förhandsvisning.*]
     ''')
 
-    # View janusmed.se in an iframe.
+    # Preview janusmed.se in an iframe.
     st.components.v1.iframe(url, height=600, scrolling=True)
-
