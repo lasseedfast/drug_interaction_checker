@@ -25,7 +25,7 @@ varningar.*
 😌 *Ingen information sparas i den här tjänsten.*
 ''')
 
-show_example = st.button('Visa exempel på hur PDF:en ska se ut')
+show_example = st.button('Visa exempel på hur din PDF ska se ut')
 
 if show_example:
     st.image('example_list.jpg', 'Exempel på läkemedelslista.')
@@ -53,8 +53,8 @@ if pdf:
     
     # Show the list of drugs.
     text_drugs = '''
-    *De här läkemedlen hittar vi i din PDF. Om du saknar något kan du lägga till det genom att 
-    följa länken till Janusmed nedan eller direkt i förhandsvisningen.*\n  '''
+    De här läkemedlen hittar vi i din PDF. Om du saknar något kan du lägga till det genom att 
+    följa länken till Janusmed nedan eller direkt i förhandsvisningen.\n  '''
     for i in drugs:
         text_drugs += f'+ **{i}**\n  '
     st.markdown(text_drugs)
