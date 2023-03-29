@@ -16,9 +16,8 @@ st.markdown('''
 ibland finns inte den tiden i sjukvården.*  
 💊 *Det finns rapporter om att exempelvis äldre människor ibland har en lång 
 lista med läkemedel där inte alla kombinationer är bra.*  
-🧑‍💻 *Genom att logga in på [1177.se](https://1177.se)
-och gå till läkemedelstjänster kan du ladda hem en PDF där det syns vilka
-läkemedel du har.*  
+🧑‍💻 *Logga in på [Läkemedelskollen](https://lakemedelskollen.ehalsomyndigheten.se) och ladda ner
+en PDF under "Uthämtade läkemedel" där det syns vilka läkemedel du har.*  
 🔎 *Den PDF\:en kan du sedan ladda upp här för att få information från 
 [Janusmed](https://janusmed.se) - som drivs av bl.a. Region Stockholm – med eventuella
 varningar.*  
