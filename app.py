@@ -9,8 +9,18 @@ def get_substance(x):
     s = re.search(r'\w+', l[-1]).group()
     return s.lower()
 
+# Change link color.
+style_links = '''<style>
+a:link { color: green; background-color: transparent; text-decoration: none;}
+a:visited { color: green; background-color: transparent; text-decoration: none;}
+a:hover { color: red; background-color: transparent; text-decoration: underline;}
+a:active { color: green; background-color: transparent; text-decoration: underline;}
+</style>'''
+
+st.markdown(style_links, unsafe_allow_html=True)
+
 # Title and explainer.
-st.title('Medicinkollen 🕵️')
+st.title(':green[Medicinkollen] ⚕️')
 st.markdown('''
 🧑‍⚕️ *Läkare ska ha koll på dina recept så att inga mediciner "krockar" men
 ibland finns inte den tiden i sjukvården.*  
@@ -21,7 +31,8 @@ en PDF under "Uthämtade läkemedel" där det syns vilka läkemedel du har.*
 🔎 *Den PDF\:en kan du sedan ladda upp här för att få information från 
 [Janusmed](https://janusmed.se) - som drivs av bl.a. Region Stockholm – med eventuella
 varningar.*  
-😌 *Ingen information sparas i den här tjänsten.*
+😌 *Ingen information sparas i den här tjänsten som är skapad av [Lasse Edfast](https://lasseedfast.se) 
+och har sin källkod [här](https://github.com/lasseedfast/drug_interaction_checker).*
 ''')
 
 show_example = st.button('Visa exempel på hur din PDF ska se ut')
