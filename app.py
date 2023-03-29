@@ -25,21 +25,40 @@ varningar.*
 😌 *Ingen information sparas i den här tjänsten.*
 ''')
 
+show_example = st.button('Visa exempel på hur PDF:en ska se ut')
+
+if show_example:
+    st.image('example_list.jpg', 'Exempel på läkemedelslista.')
 # Get the pdf with prescriptions from the user.
 pdf = st.file_uploader(label='Ladda upp din läkemedelslista', type='pdf')
 
 if pdf:
 
+    substances = []
+    drugs = []
     # Extract table from prescription pdf.
     area = [111, 20, 528, 822] # Coordinates for the corners (up, left, down, right).
-    df = tabula.read_pdf(pdf, pages='all', area=area, lattice=True)[0]
-    df.columns = ['Uthämtat datum', 'Uthämtat läkemedel', 'Användning', 'Förskrivet av', 'Uthämtad mängd', 'Läkemedelsgrupp']
-    df.dropna(axis=0, inplace=True)
-    df['substance'] = df['Uthämtat läkemedel'].apply(lambda x: get_substance(x))
+    df_list = tabula.read_pdf(pdf, pages='all', area=area, lattice=True)
+    for df in df_list:
+        if len(df.columns) != 6:
+            continue
+        df.columns = ['Uthämtat datum', 'Uthämtat läkemedel', 'Användning', 'Förskrivet av', 'Uthämtad mängd', 'Läkemedelsgrupp']
+        df.dropna(axis=0, inplace=True)
+        df['substance'] = df['Uthämtat läkemedel'].apply(lambda x: get_substance(x))
+        df['Uthämtat läkemedel'] = df['Uthämtat läkemedel'].apply(lambda x: x.split('\r')[0])
 
-    # Create list of precripted substances.
-    substances = df.substance.tolist()
-
+        # Create list of precripted substances.
+        substances += df.substance.tolist()
+        drugs += df['Uthämtat läkemedel'].tolist()
+    
+    # Show the list of drugs.
+    text_drugs = '''
+    *De här läkemedlen hittar vi i din PDF. Om du saknar något kan du lägga till det genom att 
+    följa länken till Janusmed nedan eller direkt i förhandsvisningen.*\n  '''
+    for i in drugs:
+        text_drugs += f'+ **{i}**\n  '
+    st.markdown(text_drugs)
+    
     # Create list of substance ids.
     substances_id_list = []
     for substance in substances:
@@ -53,14 +72,15 @@ if pdf:
 
     # Create URL for janusmed.se 
     substances_id_url_list = '&nslIds='.join(substances_id_list)
-    url = 'https://janusmed.se/interaktioner?nplIds=' + substances_id_url_list
+    url = 'https://janusmed.se/interaktioner?nslIds=' + substances_id_url_list
     
     # Show text with URL to janusmed.se.
     st.markdown(f'''
     :grey[*Följ [den här länken]({url}) för att se om dina 
     läkemedel går bra ihop eller om det kan finnas något
-    du skulle kunna prata med din läkare om. Nedan kan du se en förhandsvisning.*]
+    du skulle kunna prata med din läkare om. Nedan kan du se en förhandsvisning.
+    Observera att sökningen är gjord på de aktiva substanserna i dina läkemedel så 
+    namnen stämmer kanske inte överens med läkemedelsnamnen i listan ovan.*]
     ''')
-
     # Preview janusmed.se in an iframe.
     st.components.v1.iframe(url, height=600, scrolling=True)
