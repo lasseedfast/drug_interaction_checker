@@ -76,11 +76,11 @@ if pdf:
     
     # Show text with URL to janusmed.se.
     st.markdown(f'''
-    :grey[*Följ [den här länken]({url}) för att se om dina 
+    Följ [den här länken]({url}) för att se om dina 
     läkemedel går bra ihop eller om det kan finnas något
-    du skulle kunna prata med din läkare om. Nedan kan du se en förhandsvisning.
-    Observera att sökningen är gjord på de aktiva substanserna i dina läkemedel så 
-    namnen stämmer kanske inte överens med läkemedelsnamnen i listan ovan.*]
+    du skulle kunna prata med din läkare om. Nedan kan du se en förhandsvisning.  
+    *Observera att sökningen är gjord på de aktiva substanserna i dina läkemedel så namnen 
+    stämmer kanske inte överens med läkemedelsnamnen i listan ovan.*
     ''')
     # Preview janusmed.se in an iframe.
     st.components.v1.iframe(url, height=600, scrolling=True)
